@@ -4,13 +4,15 @@
 """
 
 from flask import Flask
+from flask import render_template
 app = Flask(__name__)
 
 
 @app.route('/')
 def main_page():
     """TODO"""
-    return 'Welcome to Planet as a Service!'
+    return render_template('home.html',
+        img_url='http://www.jpl.nasa.gov/images/kepler/20120111/pia15257-640.jpg')
 
 @app.errorhandler(404)
 def page_not_found(e):
