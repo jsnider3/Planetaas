@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>{{ system_name | title }} System Records</title>
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+  </head>
+
+  <body style="">
+    <div class="container">
+      <div class="hero-unit">
+        <h1>{{ system_nane | title }}</h1>
+        <h2>factoid</h2>
+        <img src='{{ img_url }}'/>
+      </div>
+    </div>
+    <div class="container">
+      <div class="content" style="margin-left:50px; margin-right: 50px;">
+        {{ system_name | title}} has the following planets:
+          * Planet one
+          * Planet two
+      </div>
+    </div>
+  </body>
+</html>
