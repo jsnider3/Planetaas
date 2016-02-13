@@ -28,8 +28,9 @@ def system_page(sysname):
 
 @app.errorhandler(404)
 def page_not_found(e):
-  """TODO custom 404 error."""
-  return "Sorry, I can't find a planet at this URL.", 404
+  """Custom 404 error."""
+  return render_template('404.html',
+    img_url='http://www.jpl.nasa.gov/images/kepler/20120111/pia15257-640.jpg')
 
 
 @app.errorhandler(500)
