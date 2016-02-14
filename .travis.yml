@@ -5,6 +5,5 @@ install:
   - pip install -r requirements.txt
   - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.32.zip
   - unzip google_appengine*
-  - export PATH=$PATH:/`pwd`/google_appengine
-# command to run tests
+
 script: dpxdt test tests/
