@@ -14,3 +14,7 @@ tests:
   - name: home
     url: http://0.0.0.0:8080/
     config: {}
+
+  - name: notfound
+    url: http://0.0.0.0:8080/invalid
+    config: {}
