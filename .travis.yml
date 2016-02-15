@@ -1,9 +1,20 @@
 language: python
 python:
-  - "2.7"
+  - '2.7'
+
+before_install:
+- openssl aes-256-cbc -K $encrypted_1388c7bdeea1_key -iv $encrypted_1388c7bdeea1_iv
+  -in client-secret.json.enc -out client-secret.json -d
+
 install:
   - pip install -r requirements.txt
   - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.32.zip
   - unzip -q google_appengine*
 
 script: dpxdt test tests/
+
+deploy:
+  provider: gae
+  keyfile: client-secret.json.enc
+  project: planetaas-1218
+
