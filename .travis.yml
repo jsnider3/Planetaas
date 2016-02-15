@@ -15,6 +15,6 @@ script: dpxdt test tests/
 
 deploy:
   provider: gae
-  keyfile: client-secret.json.enc
+  keyfile: client-secret.json
   project: planetaas-1218
 
