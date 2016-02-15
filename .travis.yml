@@ -11,7 +11,7 @@ install:
   - wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.32.zip
   - unzip -q google_appengine*
 
-script: echo "dpxdt test tests/ is done in pre-commit hook"
+script: python tester.py
 
 before_deploy:
   - rm -rf google_appengine*
