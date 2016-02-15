@@ -13,6 +13,9 @@ install:
 
 script: dpxdt test tests/
 
+before_deploy:
+  - rm -rf google_appengine*
+
 deploy:
   provider: gae
   keyfile: client-secret.json
