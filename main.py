@@ -3,6 +3,7 @@
   @author Josh Snider
 """
 
+import planetaas
 from flask import Flask
 from flask import render_template
 app = Flask(__name__)
@@ -16,9 +17,15 @@ def main_page():
 
 @app.route('/planet/<planet>')
 def planet_page(planet):
-  return render_template('planet.html',
-    img_url='http://www.jpl.nasa.gov/images/kepler/20120111/pia15257-640.jpg',
-    planet_name=planet)
+  info = planetaas.get_info(planet)
+  page = None
+  if info:
+    page = render_template('planet.html',
+      img_url='http://www.jpl.nasa.gov/images/kepler/20120111/pia15257-640.jpg',
+      planet_name=planet)
+  else:
+    page = page_not_found('/planet/' + planet)
+  return page
 
 @app.route('/system/<sysname>')
 def system_page(sysname):

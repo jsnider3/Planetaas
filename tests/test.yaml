@@ -18,3 +18,11 @@ tests:
   - name: notfound
     url: http://0.0.0.0:8080/invalid
     config: {}
+
+  - name: fakeplanet
+    url: http://0.0.0.0:8080/planet/aasdasd
+    config: {}
+
+  - name: realplanet
+    url: http://0.0.0.0:8080/planet/mars
+    config: {}
