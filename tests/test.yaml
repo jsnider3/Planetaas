@@ -26,3 +26,7 @@ tests:
   - name: realplanet
     url: http://0.0.0.0:8080/planet/mars
     config: {}
+
+  - name: solsystem
+    url: http://0.0.0.0:8080/system/sol
+    config: {}

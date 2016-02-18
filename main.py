@@ -4,6 +4,7 @@
 """
 
 import planetaas
+import systemaas
 from flask import Flask
 from flask import render_template
 app = Flask(__name__)
@@ -29,9 +30,17 @@ def planet_page(planet):
 
 @app.route('/system/<sysname>')
 def system_page(sysname):
-  return render_template('system.html',
-    img_url='http://www.jpl.nasa.gov/images/kepler/20120111/pia15257-640.jpg',
-    system_name=sysname)
+  info = systemaas.get_info(sysname)
+  page = None
+  if info:
+    print info
+    page = render_template('system.html',
+      img_url='http://www.jpl.nasa.gov/images/kepler/20120111/pia15257-640.jpg',
+      system_name=sysname,
+      planets=info)
+  else:
+    page = page_not_found('/system/' + sysname)
+  return page
 
 @app.errorhandler(404)
 def page_not_found(e):
