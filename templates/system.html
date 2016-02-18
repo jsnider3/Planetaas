@@ -17,7 +17,7 @@
         {{ system_name | title}} has the following planets:
           <ul>
           {% for planet in planets %}
-            <li>{{ planet.name }}</li>
+            <li>{{ planet.name | title}}</li>
           {% endfor %}
           </ul>
       </div>
