@@ -7,8 +7,8 @@ import unittest
 class Tests(unittest.TestCase):
 
   def test_get_factoid(self):
-    assert "vacation" in systemaas.get_factoid('sol')
-    assert "parsecs" in systemaas.get_factoid('kepler-174')
+    assert "vacation" in systemaas.System('sol').fact
+    assert "parsecs" in systemaas.System('kepler-174').fact
 
   def test_get_info(self):
     assert systemaas.get_info('Babayaga') == None
