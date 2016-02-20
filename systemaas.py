@@ -4,6 +4,7 @@
 """
 
 import csv
+from planet import Planet
 import urllib2
 
 SOL = [{
@@ -69,7 +70,22 @@ def get_info(system_name):
   system = None
   if system_name == "sol":
     system = SOL
+  else:
+    system = get_exoplanets(system_name)
+    print([str(planet) for planet in system])
   return system
+
+def get_exoplanets(system_name):
+  ''' Look up data on the planets in a (non-Sol) star system. '''
+  url = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt"
+  response = urllib2.urlopen(url)
+  cr = csv.reader(response)
+
+  planets = []
+  for row in cr:
+    if row[0].lower() == system_name.lower():
+      planets.append(dict(Planet(row)))
+  return planets
 
 def get_systems():
   ''' Get the list of star systems with confirmed planets. '''
