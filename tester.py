@@ -6,10 +6,24 @@ import unittest
 
 class Tests(unittest.TestCase):
 
+  def test_get_factoid(self):
+    assert "vacation" in systemaas.get_factoid('sol')
+    assert "parsecs" in systemaas.get_factoid('kepler-174')
+
+  def test_get_info(self):
+    assert systemaas.get_info('Babayaga') == None
+    sol = systemaas.get_info('Sol')
+    assert 'name' in sol
+    assert 'planets' in sol
+    assert 'star' in sol
+    assert 'orbits' in sol
+    assert 'fact' in sol
+
   def test_get_systems(self):
     assert 'Sol' in systemaas.get_systems()
     assert 'WASP-98' in systemaas.get_systems()
     assert 'HD 107148' in systemaas.get_systems()
+    assert 'Babayaga' not in systemaas.get_systems()
 
   def test_sol(self):
     assert planetaas.get_info("mErcury")["name"] == "mercury"

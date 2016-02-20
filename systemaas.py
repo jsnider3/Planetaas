@@ -4,6 +4,7 @@
 """
 
 import csv
+import hashlib
 from planet import Planet
 import urllib2
 
@@ -65,15 +66,47 @@ SOL = [{
       }
     ]
 
+def get_factoid(system_name):
+  ''' Return a fun fact about the given star system. '''
+  facts = ['Voted most likely to go supernova!',
+    'Now with 20% more Kerbals!',
+    'Contains herbal helium!',
+    'A good source of vitamin D!',
+    '#1 rated vacation spot!',
+    'Only 15 parsecs from the Kessel run!',
+    'Non-allergenic, Gluten-free, and Vegan-safe!',
+    'Beautiful methane sunsets!',
+    'As seen on spectrogram!']
+
+  index = int(hashlib.md5(system_name).hexdigest(), 16) % len(facts)
+  return facts[index]
+
 def get_info(system_name):
+  ''' Get all the info about a system needed to display it. '''
   system_name = system_name.lower()
-  system = None
+  planets = None
   if system_name == "sol":
-    system = SOL
+    planets = SOL
   else:
-    system = get_exoplanets(system_name)
-    print([str(planet) for planet in system])
-  return system
+    planets = get_exoplanets(system_name)
+    print([str(planet) for planet in planets])
+  info = None
+  if planets:
+    info = {}
+    info['name'] = system_name
+    info['planets'] = planets
+    info['star'] = {"size": 20, "color": "yellow"}
+    info['orbits'] = [get_orbit(planet) for planet in planets]
+    info['fact'] = get_factoid(system_name)
+  return info
+
+def get_orbit(planet):
+  ''' Get the svg orbit for a planet. '''
+  orbit = {}
+  orbit['major'] = 80
+  orbit['minor'] = 40
+  orbit['rot'] = 45
+  return orbit
 
 def get_exoplanets(system_name):
   ''' Look up data on the planets in a (non-Sol) star system. '''

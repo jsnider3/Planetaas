@@ -41,8 +41,7 @@ def system_page(sysname):
   if info:
     page = render_template('system.html',
       img_url=generic_img,
-      system_name=sysname,
-      planets=info)
+      system=info)
   else:
     page = page_not_found('/system/' + sysname)
   return page
