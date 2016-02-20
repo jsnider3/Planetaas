@@ -10,6 +10,17 @@ class Tests(unittest.TestCase):
     assert "vacation" in systemaas.System('sol').fact
     assert "parsecs" in systemaas.System('kepler-174').fact
 
+  def test_get_morgancolor(self):
+    assert systemaas.System.get_morgancolor("O") == "blue"
+    assert systemaas.System.get_morgancolor("B") == "blue"
+    assert systemaas.System.get_morgancolor("A") == "blue"
+    assert systemaas.System.get_morgancolor("F") == "white"
+    assert systemaas.System.get_morgancolor("G") == "yellow"
+    assert systemaas.System.get_morgancolor("K") == "orange"
+    assert systemaas.System.get_morgancolor("M") == "red"
+    assert systemaas.System.get_morgancolor("L") == "red"
+    assert systemaas.System.get_morgancolor("T") == "red"
+
   def test_get_info(self):
     assert systemaas.get_info('Babayaga') == None
     sol = systemaas.get_info('Sol')

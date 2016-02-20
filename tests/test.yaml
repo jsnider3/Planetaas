@@ -26,6 +26,10 @@ tests:
     url: http://0.0.0.0:8080/system/Sol
     config: {}
 
+  - name: smallsystem
+    url: http://0.0.0.0:8080/system/GJ%20179
+    config: {}
+
   - name: fakesystem
     url: http://0.0.0.0:8080/system/babayaga
     config: {}

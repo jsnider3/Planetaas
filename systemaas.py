@@ -5,6 +5,7 @@
 
 import csv
 import hashlib
+import pdb
 from planet import Planet
 import urllib
 
@@ -85,6 +86,7 @@ class System(object):
     for row in cr:
       if row[0] == self.name:
         planets.append(dict(Planet(row)))
+    self.planets = planets
     return planets
 
   def get_factoid(self):
@@ -102,36 +104,80 @@ class System(object):
     index = int(hashlib.md5(self.name.lower()).hexdigest(), 16) % len(facts)
     return facts[index]
 
-  def get_orbit(self, planet):
-    ''' Get the svg orbit for a planet. '''
-    orbit = {}
-    orbit['major'] = 80
-    orbit['minor'] = 40
-    orbit['rot'] = 45
-    return orbit
+  def get_orbits(self):
+    ''' Get the svg orbit for the planets. '''
+    orbits = []
+    for planet in self.planets:
+      orbit = {}
+      orbit['major'] = 80
+      orbit['minor'] = 40
+      orbit['rot'] = 45
+      orbits.append(orbit)
+    return orbits
+
+  @staticmethod
+  def get_morgancolor(startype):
+    ''' Gets the color of a star with given
+        Morgan-Keenan classification. '''
+    morgan = startype[0]
+    morgan_colors = {}
+    morgan_colors["O"] = "blue"
+    morgan_colors["B"] = "blue"
+    morgan_colors["A"] = "blue"
+    morgan_colors["F"] = "white"
+    morgan_colors["G"] = "yellow"
+    morgan_colors["K"] = "orange"
+    morgan_colors["M"] = "red"
+    morgan_colors["L"] = "red"
+    morgan_colors["T"] = "red"
+    color = "yellow"
+    if morgan in morgan_colors:
+      color = morgan_colors[morgan]
+    return color
 
   def get_stardata(self):
     ''' Look up data on the planets in a (non-Sol) star system. '''
-    return {"size": 20, "color": "yellow"}
+    url = (API_BASE +
+      "&select=st_spstr,st_age,st_lum" +
+      "&where=" + urllib.quote("pl_hostname like '" + self.name + "'"))
+    response = urllib.urlopen(url)
+    cr = csv.reader(response)
+    stardata = list(cr)
+    result = {}
+    result["size"] = 20
+    result["color"] = "yellow"
+    if len(stardata) > 1:
+      stardata = stardata[1]
+      if stardata[0]:
+        result["color"] = self.get_morgancolor(stardata[0])
+      if stardata[1]:
+        result["age"] = stardata[1]
+      if stardata[2]:
+        result["size"] = result["size"] * (2 ** float(stardata[2]))
+        result["size"] = min(80, result["size"])
+    return result
+
+  def to_dict(self):
+    info = None
+    if self.planets:
+      info = {}
+      info['name'] = self.name
+      info['planets'] = self.planets
+      info['star'] = self.get_stardata()
+      info['orbits'] = self.get_orbits()
+      info['fact'] = self.fact
+    return info
 
 def get_info(system_name):
   ''' Get all the info about a system needed to display it. '''
   system = System(system_name)
-  planets = None
   if system.name.lower() == "sol":
-    planets = SOL
+    system.planets = SOL
   else:
-    planets = system.get_exoplanets()
-    print([str(planet) for planet in planets])
-  info = None
-  if planets:
-    info = {}
-    info['name'] = system.name
-    info['planets'] = planets
-    info['star'] = system.get_stardata()
-    info['orbits'] = [system.get_orbit(planet) for planet in planets]
-    info['fact'] = system.fact
-  return info
+    system.get_exoplanets()
+    print([str(planet) for planet in system.planets])
+  return system.to_dict()
+
 
 def get_systems():
   ''' Get the list of star systems with confirmed planets. '''

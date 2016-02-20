@@ -7,16 +7,19 @@ import csv
 from planet import Planet
 import urllib2
 
-url = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt"
+url = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt,st_spstr,st_age"
 response = urllib2.urlopen(url)
 cr = csv.reader(response)
 
-planets = []
+cols = next(cr)
+colcounts = [0]*len(cols)
+rowcount = 0
 for row in cr:
-    planets.append(Planet(row))
-
-dicts = [dict(planet) for planet in planets]
-num = len(dicts)
-for key in dicts[0]:
-  print (key, float(len([1 for dic in dicts if key in dic])) / num)
-
+  rowcount += 1
+  if row[-2]:
+    print(row[-2])
+  for ind in range(len(row)):
+    if row[ind]:
+      colcounts[ind] += 1
+for ind in range(len(cols)):
+  print(cols[ind], float(colcounts[ind]) / rowcount)

@@ -19,7 +19,8 @@
         <h1>{{ system.name }}</h1>
         <h2>{{ system.fact }}</h2>
         <svg xmlns="//www.w3.org/2000/svg" width="300" height="300" style="background-color:black;">
-          <circle cx="150" cy="150" r="{{ system.star.size }}" stroke="{{ system.star.color}}" stroke-width="4" fill="yellow" />
+          <circle cx="150" cy="150" r="{{ system.star.size }}"
+            stroke="{{ system.star.color}}" stroke-width="4" fill="{{ system.star.color }}" />
           {% for orbit in system.orbits %}
             <ellipse cx="150" cy="150" rx="{{ orbit.major }}" ry="{{ orbit.minor }}" stroke="yellow"
                 stroke-width="4" style="fill: none; fill-opacity: 0.0" transform="rotate({{ orbit.rot }} 150 150)">
