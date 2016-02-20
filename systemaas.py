@@ -78,7 +78,6 @@ class System(object):
     url = (API_BASE +
       "&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt" +
       "&where=" + urllib.quote("pl_hostname like '" + self.name + "'"))
-    print(url)
     response = urllib.urlopen(url)
     cr = csv.reader(response)
 
