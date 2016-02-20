@@ -5,19 +5,19 @@
 
 class Planet(object):
 
-  def __init__(self, row):
-    self.star = row[0] + " " + row[1]
-    self.period = row[2]
-    self.semimaj = row[3]
-    self.eccen = row[4]
-    self.incl = row[5]
-    self.radj = row[6]
-    self.dens = row[7]
-    self.eqt = row[8]
+  def __init__(self, name, fields):
+    self.name = name
+    self.period = fields[0]
+    self.semimaj = fields[1]
+    self.eccen = fields[2]
+    self.incl = fields[3]
+    self.radj = fields[4]
+    self.dens = fields[5]
+    self.eqt = fields[6]
 
   def __iter__(self):
-    if self.star:
-      yield ("name", self.star)
+    if self.name:
+      yield ("name", self.name)
     if self.period:
       yield ("period", self.period)
     if self.semimaj:

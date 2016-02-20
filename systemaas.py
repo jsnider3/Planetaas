@@ -10,69 +10,16 @@ from planet import Planet
 import urllib
 
 API_BASE = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets"
-SOL = [{
-      "name" : "mercury",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      },
-      {
-      "name" : "venus",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      },
-      {
-      "name" : "earth",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      },
-      {
-      "name" : "mars",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      },
-      {
-      "name" : "jupiter",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      },
-      {
-      "name" : "saturn",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      },
-      {
-      "name" : "uranus",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      },
-      {
-      "name" : "neptune",
-      "radius" : "0",
-      "mass" : "0",
-      "orbmin" : "0",
-      "orbmax" : "0"
-      }
-    ]
 
 class System(object):
 
   def __init__(self, name):
     self.name = name
     self.fact = self.get_factoid()
+    self.planets = []
+
+  def add_planet(self, planet):
+    self.planets.append(planet)
 
   def get_exoplanets(self):
     ''' Look up data on the planets in a (non-Sol) star system. '''
@@ -85,7 +32,7 @@ class System(object):
     planets = []
     for row in cr:
       if row[0] == self.name:
-        planets.append(dict(Planet(row)))
+        planets.append(dict(Planet(row[0] + " " + row[1], row[2:])))
     self.planets = planets
     return planets
 
@@ -168,16 +115,25 @@ class System(object):
       info['fact'] = self.fact
     return info
 
+SOL = System('Sol')
+SOL.add_planet(Planet("Mercury", [.24 * 365, .39, .2056, 7.01, .034, 5.43, 440]))
+SOL.add_planet(Planet("Venus", [.62 * 365, .72, .0068, 3.39, .085, 5.25, 735]))
+SOL.add_planet(Planet("Earth", [365, 1.0, .0167, 0, 0.089, 5.52, 288]))
+SOL.add_planet(Planet("Mars", [1.88 * 365, 1.52, .0934, 1.85, .048, 3.93, 218]))
+SOL.add_planet(Planet("Jupiter", [11.86 * 365, 5.2, .0483, 1.31, 1.00, 1.33, 123]))
+SOL.add_planet(Planet("Saturn", [29.46 * 365, 9.5, .0560, 2.49, .84, 0.71, 103]))
+SOL.add_planet(Planet("Uranus", [84.01 * 365, 19.2, .0461, 0.77, .36, 1.24, 73]))
+SOL.add_planet(Planet("Neptune", [164.8 * 365, 30.0, .0097, 1.77, .35, 1.67, 63]))
+
 def get_info(system_name):
   ''' Get all the info about a system needed to display it. '''
   system = System(system_name)
   if system.name.lower() == "sol":
-    system.planets = SOL
+    system = SOL
   else:
     system.get_exoplanets()
     print([str(planet) for planet in system.planets])
   return system.to_dict()
-
 
 def get_systems():
   ''' Get the list of star systems with confirmed planets. '''
