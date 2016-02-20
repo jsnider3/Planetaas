@@ -72,6 +72,18 @@ class System(object):
     self.name = name.lower()
     self.fact = self.get_factoid()
 
+  def get_exoplanets(self):
+    ''' Look up data on the planets in a (non-Sol) star system. '''
+    url = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt"
+    response = urllib2.urlopen(url)
+    cr = csv.reader(response)
+
+    planets = []
+    for row in cr:
+      if row[0].lower() == self.name:
+        planets.append(dict(Planet(row)))
+    return planets
+
   def get_factoid(self):
     ''' Return a fun fact about the given star system. '''
     facts = ['Voted most likely to go supernova!',
@@ -95,17 +107,8 @@ class System(object):
     orbit['rot'] = 45
     return orbit
 
-  def get_exoplanets(self):
-    ''' Look up data on the planets in a (non-Sol) star system. '''
-    url = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt"
-    response = urllib2.urlopen(url)
-    cr = csv.reader(response)
-
-    planets = []
-    for row in cr:
-      if row[0].lower() == self.name:
-        planets.append(dict(Planet(row)))
-    return planets
+  def get_stardata(self):
+    return {"size": 20, "color": "yellow"}
 
 def get_info(system_name):
   ''' Get all the info about a system needed to display it. '''
@@ -121,7 +124,7 @@ def get_info(system_name):
     info = {}
     info['name'] = system.name
     info['planets'] = planets
-    info['star'] = {"size": 20, "color": "yellow"}
+    info['star'] = system.get_stardata()
     info['orbits'] = [system.get_orbit(planet) for planet in planets]
     info['fact'] = system.fact
   return info
