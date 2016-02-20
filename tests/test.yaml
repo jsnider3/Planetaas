@@ -23,7 +23,7 @@ tests:
     config: {}
 
   - name: solsystem
-    url: http://0.0.0.0:8080/system/sol
+    url: http://0.0.0.0:8080/system/Sol
     config: {}
 
   - name: fakesystem

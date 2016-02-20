@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>{{ system.name | title }} System Records</title>
+    <title>{{ system.name }} System Records</title>
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <style>
       table {
@@ -16,7 +16,7 @@
   <body style="">
     <div class="container">
       <div class="hero-unit">
-        <h1>{{ system.name | title }}</h1>
+        <h1>{{ system.name }}</h1>
         <h2>{{ system.fact }}</h2>
         <svg xmlns="//www.w3.org/2000/svg" width="300" height="300" style="background-color:black;">
           <circle cx="150" cy="150" r="{{ system.star.size }}" stroke="{{ system.star.color}}" stroke-width="4" fill="yellow" />
@@ -31,7 +31,7 @@
     </div>
     <div class="container">
       <div class="content" style="margin-left:50px; margin-right: 50px;">
-        {{ system.name | title}} has the following planets:
+        {{ system.name }} has the following planets:
           <table style="border: 1px solid black; border-collapse: collapse;">
             <tr>
               <td> Name </td>
