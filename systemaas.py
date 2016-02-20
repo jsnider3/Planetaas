@@ -77,7 +77,7 @@ class System(object):
     ''' Look up data on the planets in a (non-Sol) star system. '''
     url = (API_BASE +
       "&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt" +
-      "&where=pl_hostname%20like%20%27" + self.name + "%27")
+      "&where=" + urllib.quote("pl_hostname like '" + self.name + "'"))
     print(url)
     response = urllib.urlopen(url)
     cr = csv.reader(response)
@@ -137,7 +137,7 @@ def get_info(system_name):
 def get_systems():
   ''' Get the list of star systems with confirmed planets. '''
   systems = ['Sol']
-  api_url = API_BASE + "&select=distinct%20pl_hostname"
+  api_url = API_BASE + "&select=" + urllib.quote("distinct pl_hostname")
   response = urllib.urlopen(api_url)
   cr = csv.reader(response)
   next(cr)
