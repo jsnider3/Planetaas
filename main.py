@@ -28,6 +28,11 @@ def planet_page(planet):
     page = page_not_found('/planet/' + planet)
   return page
 
+@app.route('/systems/')
+def system_list():
+  systems = systemaas.get_systems()
+  return render_template('systems.html', systems=systems)
+
 @app.route('/system/<sysname>')
 def system_page(sysname):
   info = systemaas.get_info(sysname)

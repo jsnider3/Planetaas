@@ -1,9 +1,15 @@
 import planetaas
 import os
 import subprocess
+import systemaas
 import unittest
 
 class Tests(unittest.TestCase):
+
+  def test_get_systems(self):
+    assert 'Sol' in systemaas.get_systems()
+    assert 'WASP-98' in systemaas.get_systems()
+    assert 'HD 107148' in systemaas.get_systems()
 
   def test_sol(self):
     assert planetaas.get_info("mErcury")["name"] == "mercury"
