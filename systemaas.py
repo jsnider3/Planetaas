@@ -6,8 +6,9 @@
 import csv
 import hashlib
 from planet import Planet
-import urllib2
+import urllib
 
+API_BASE = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets"
 SOL = [{
       "name" : "mercury",
       "radius" : "0",
@@ -69,18 +70,21 @@ SOL = [{
 class System(object):
 
   def __init__(self, name):
-    self.name = name.lower()
+    self.name = name
     self.fact = self.get_factoid()
 
   def get_exoplanets(self):
     ''' Look up data on the planets in a (non-Sol) star system. '''
-    url = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt"
-    response = urllib2.urlopen(url)
+    url = (API_BASE +
+      "&select=pl_hostname,pl_letter,pl_orbper,pl_orbsmax,pl_orbeccen,pl_orbincl,pl_radj,pl_dens,pl_eqt" +
+      "&where=pl_hostname%20like%20%27" + self.name + "%27")
+    print(url)
+    response = urllib.urlopen(url)
     cr = csv.reader(response)
 
     planets = []
     for row in cr:
-      if row[0].lower() == self.name:
+      if row[0] == self.name:
         planets.append(dict(Planet(row)))
     return planets
 
@@ -96,7 +100,7 @@ class System(object):
       'Beautiful methane sunsets!',
       'As seen on spectrogram!']
 
-    index = int(hashlib.md5(self.name).hexdigest(), 16) % len(facts)
+    index = int(hashlib.md5(self.name.lower()).hexdigest(), 16) % len(facts)
     return facts[index]
 
   def get_orbit(self, planet):
@@ -108,13 +112,14 @@ class System(object):
     return orbit
 
   def get_stardata(self):
+    ''' Look up data on the planets in a (non-Sol) star system. '''
     return {"size": 20, "color": "yellow"}
 
 def get_info(system_name):
   ''' Get all the info about a system needed to display it. '''
   system = System(system_name)
   planets = None
-  if system.name == "sol":
+  if system.name.lower() == "sol":
     planets = SOL
   else:
     planets = system.get_exoplanets()
@@ -132,8 +137,8 @@ def get_info(system_name):
 def get_systems():
   ''' Get the list of star systems with confirmed planets. '''
   systems = ['Sol']
-  api_url = "http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=distinct%20pl_hostname"
-  response = urllib2.urlopen(api_url)
+  api_url = API_BASE + "&select=distinct%20pl_hostname"
+  response = urllib.urlopen(api_url)
   cr = csv.reader(response)
   next(cr)
   for system in cr:
