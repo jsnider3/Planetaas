@@ -21,6 +21,22 @@ class System(object):
   def add_planet(self, planet):
     self.planets.append(planet)
 
+  def load_planets(self):
+    ''' Load the planets for this system. '''
+    if not self.planets:
+      if self.name.lower() == "sol":
+        self.add_planet(Planet("Mercury", [.24 * 365, .39, .2056, 7.01, .034, 5.43, 440]))
+        self.add_planet(Planet("Venus", [.62 * 365, .72, .0068, 3.39, .085, 5.25, 735]))
+        self.add_planet(Planet("Earth", [365, 1.0, .0167, 0, 0.089, 5.52, 288]))
+        self.add_planet(Planet("Mars", [1.88 * 365, 1.52, .0934, 1.85, .048, 3.93, 218]))
+        self.add_planet(Planet("Jupiter", [11.86 * 365, 5.2, .0483, 1.31, 1.00, 1.33, 123]))
+        self.add_planet(Planet("Saturn", [29.46 * 365, 9.5, .0560, 2.49, .84, 0.71, 103]))
+        self.add_planet(Planet("Uranus", [84.01 * 365, 19.2, .0461, 0.77, .36, 1.24, 73]))
+        self.add_planet(Planet("Neptune", [164.8 * 365, 30.0, .0097, 1.77, .35, 1.67, 63]))
+      else:
+        self.get_exoplanets()
+    return self.planets
+
   def get_exoplanets(self):
     ''' Look up data on the planets in a (non-Sol) star system. '''
     url = (API_BASE +
@@ -54,11 +70,14 @@ class System(object):
   def get_orbits(self):
     ''' Get the svg orbit for the planets. '''
     orbits = []
-    for planet in self.planets:
+    colors = ['blue', 'brown', 'yellow', 'aqua',
+              'green', 'indigo', 'red', 'snow']
+    for ind in range(len(self.planets)):
       orbit = {}
       orbit['major'] = 80
       orbit['minor'] = 40
       orbit['rot'] = 45
+      orbit['color'] = colors[ind]
       orbits.append(orbit)
     return orbits
 
@@ -115,24 +134,10 @@ class System(object):
       info['fact'] = self.fact
     return info
 
-SOL = System('Sol')
-SOL.add_planet(Planet("Mercury", [.24 * 365, .39, .2056, 7.01, .034, 5.43, 440]))
-SOL.add_planet(Planet("Venus", [.62 * 365, .72, .0068, 3.39, .085, 5.25, 735]))
-SOL.add_planet(Planet("Earth", [365, 1.0, .0167, 0, 0.089, 5.52, 288]))
-SOL.add_planet(Planet("Mars", [1.88 * 365, 1.52, .0934, 1.85, .048, 3.93, 218]))
-SOL.add_planet(Planet("Jupiter", [11.86 * 365, 5.2, .0483, 1.31, 1.00, 1.33, 123]))
-SOL.add_planet(Planet("Saturn", [29.46 * 365, 9.5, .0560, 2.49, .84, 0.71, 103]))
-SOL.add_planet(Planet("Uranus", [84.01 * 365, 19.2, .0461, 0.77, .36, 1.24, 73]))
-SOL.add_planet(Planet("Neptune", [164.8 * 365, 30.0, .0097, 1.77, .35, 1.67, 63]))
-
 def get_info(system_name):
   ''' Get all the info about a system needed to display it. '''
   system = System(system_name)
-  if system.name.lower() == "sol":
-    system = SOL
-  else:
-    system.get_exoplanets()
-    print([str(planet) for planet in system.planets])
+  system.load_planets()
   return system.to_dict()
 
 def get_systems():
