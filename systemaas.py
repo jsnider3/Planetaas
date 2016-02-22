@@ -17,8 +17,10 @@ class System(object):
     self.name = name
     self.fact = self.get_factoid()
     self.planets = []
+    self.stardata = None
 
   def add_planet(self, planet):
+    ''' Add a planet to our list of planets. '''
     self.planets.append(planet)
 
   def load_planets(self):
@@ -27,7 +29,7 @@ class System(object):
       if self.name.lower() == "sol":
         self.add_planet(Planet("Mercury", [.24 * 365, .39, .2056, 7.01, .034, 5.43, 440]))
         self.add_planet(Planet("Venus", [.62 * 365, .72, .0068, 3.39, .085, 5.25, 735]))
-        self.add_planet(Planet("Earth", [365, 1.0, .0167, 0, 0.089, 5.52, 288]))
+        self.add_planet(Planet("Earth", [365, 1.0, .0167, 0.0, 0.089, 5.52, 288]))
         self.add_planet(Planet("Mars", [1.88 * 365, 1.52, .0934, 1.85, .048, 3.93, 218]))
         self.add_planet(Planet("Jupiter", [11.86 * 365, 5.2, .0483, 1.31, 1.00, 1.33, 123]))
         self.add_planet(Planet("Saturn", [29.46 * 365, 9.5, .0560, 2.49, .84, 0.71, 103]))
@@ -48,7 +50,7 @@ class System(object):
     planets = []
     for row in cr:
       if row[0] == self.name:
-        planets.append(dict(Planet(row[0] + " " + row[1], row[2:])))
+        planets.append(Planet(row[0] + " " + row[1], row[2:]))
     self.planets = planets
     return planets
 
@@ -72,12 +74,25 @@ class System(object):
     orbits = []
     colors = ['blue', 'brown', 'yellow', 'aqua',
               'green', 'indigo', 'red', 'snow']
+    majs = [planet.semimaj for planet in self.planets if planet.semimaj]
+    mins = [planet.semimin for planet in self.planets if planet.semimin]
+    scale = None
+    if majs and mins:
+      maj_max = max(majs)
+      min_min = min(mins)
+      #maj_max is 150 pixels
+      #min_min is 20 pixels
+      scale = lambda x: (x - min_min)*130/maj_max + 20
+    starsize = self.get_stardata()['size']
     for ind in range(len(self.planets)):
       orbit = {}
-      orbit['major'] = 80
-      orbit['minor'] = 40
-      orbit['rot'] = 45
-      orbit['color'] = colors[ind]
+      orbit['valid'] = bool(self.planets[ind].semimaj)
+      orbit['name'] = self.planets[ind].name
+      if orbit['valid']:
+        orbit['major'] = starsize + scale(self.planets[ind].semimaj)
+        orbit['minor'] = starsize + scale(self.planets[ind].semimin)
+        orbit['rot'] = 45
+        orbit['color'] = colors[ind]
       orbits.append(orbit)
     return orbits
 
@@ -103,32 +118,34 @@ class System(object):
 
   def get_stardata(self):
     ''' Look up data on the planets in a (non-Sol) star system. '''
-    url = (API_BASE +
-      "&select=st_spstr,st_age,st_lum" +
-      "&where=" + urllib.quote("pl_hostname like '" + self.name + "'"))
-    response = urllib.urlopen(url)
-    cr = csv.reader(response)
-    stardata = list(cr)
-    result = {}
-    result["size"] = 20
-    result["color"] = "yellow"
-    if len(stardata) > 1:
-      stardata = stardata[1]
-      if stardata[0]:
-        result["color"] = self.get_morgancolor(stardata[0])
-      if stardata[1]:
-        result["age"] = stardata[1]
-      if stardata[2]:
-        result["size"] = result["size"] * (2 ** float(stardata[2]))
-        result["size"] = min(80, result["size"])
-    return result
+    if not self.stardata:
+      url = (API_BASE +
+        "&select=st_spstr,st_age,st_lum" +
+        "&where=" + urllib.quote("pl_hostname like '" + self.name + "'"))
+      response = urllib.urlopen(url)
+      cr = csv.reader(response)
+      stardata = list(cr)
+      result = {}
+      result["size"] = 20
+      result["color"] = "yellow"
+      if len(stardata) > 1:
+        stardata = stardata[1]
+        if stardata[0]:
+          result["color"] = self.get_morgancolor(stardata[0])
+        if stardata[1]:
+          result["age"] = stardata[1]
+        if stardata[2]:
+          result["size"] = result["size"] * (2 ** float(stardata[2]))
+          result["size"] = min(80, result["size"])
+      self.stardata = result
+    return self.stardata
 
   def to_dict(self):
     info = None
     if self.planets:
       info = {}
       info['name'] = self.name
-      info['planets'] = self.planets
+      info['planets'] = [dict(planet) for planet in self.planets]
       info['star'] = self.get_stardata()
       info['orbits'] = self.get_orbits()
       info['fact'] = self.fact

@@ -24,7 +24,7 @@
           {% for orbit in system.orbits %}
             <ellipse cx="150" cy="150" rx="{{ orbit.major }}" ry="{{ orbit.minor }}" stroke="{{ orbit.color }}"
                 stroke-width="4" style="fill: none; fill-opacity: 0.0" transform="rotate({{ orbit.rot }} 150 150)">
-              <title>planet</title>
+              <title>{{ orbit.name }}</title>
             </ellipse>
           {% endfor %}
         </svg>

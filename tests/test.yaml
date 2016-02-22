@@ -30,6 +30,10 @@ tests:
     url: http://0.0.0.0:8080/system/GJ%20179
     config: {}
 
+  - name: mysterysystem
+    url: http://localhost:8080/system/KIC%2010001893
+    config: {}
+
   - name: fakesystem
     url: http://0.0.0.0:8080/system/babayaga
     config: {}
