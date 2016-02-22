@@ -29,3 +29,14 @@ As per data.py these are defined at the following rates:
 * pl_eqt =  0.15087538619979401
 * pl_orbincl = 0.22193614830072092
 
+The Caltech database may not be very good, it looks like there are
+better versions out there.
+
+Look into https://github.com/OpenExoplanetCatalogue/open_exoplanet_catalogue/
+
+In conclusion, the OEC database suffers from the same weaknesses as the
+Caltech database and has a less performant API. I am now back to the
+originalish plan of filling in the unknown values with guesses.
+
+One thing we could do is sort the results of the systems api by how
+good the data for the systems' planets are.
