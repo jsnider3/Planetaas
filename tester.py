@@ -1,4 +1,3 @@
-import planetaas
 import os
 import subprocess
 import systemaas
@@ -35,16 +34,6 @@ class Tests(unittest.TestCase):
     assert 'WASP-98' in systemaas.get_systems()
     assert 'HD 107148' in systemaas.get_systems()
     assert 'Babayaga' not in systemaas.get_systems()
-
-  def test_sol(self):
-    assert planetaas.get_info("mErcury")["name"] == "mercury"
-    assert planetaas.get_info("venus")["name"] == "venus"
-    assert planetaas.get_info("Earth")["name"] == "earth"
-    assert planetaas.get_info("MARS")["name"] == "mars"
-    assert planetaas.get_info("Jupiter")["name"] == "jupiter"
-    assert planetaas.get_info("Saturn")["name"] == "saturn"
-    assert planetaas.get_info("Uranus")["name"] == "uranus"
-    assert planetaas.get_info("Neptune")["name"] == "neptune"
 
 if __name__ == '__main__':
   unittest.main()

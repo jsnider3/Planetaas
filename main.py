@@ -3,7 +3,6 @@
   @author Josh Snider
 """
 
-import planetaas
 import systemaas
 from flask import Flask
 from flask import render_template
@@ -16,18 +15,6 @@ def main_page():
   """Show the homepage"""
   return render_template('home.html',
     img_url=generic_img)
-
-@app.route('/planet/<planet>')
-def planet_page(planet):
-  info = planetaas.get_info(planet)
-  page = None
-  if info:
-    page = render_template('planet.html',
-      img_url=generic_img,
-      planet_name=planet)
-  else:
-    page = page_not_found('/planet/' + planet)
-  return page
 
 @app.route('/systems/')
 def system_list():
